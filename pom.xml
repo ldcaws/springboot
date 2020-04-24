@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>security-web</module>
+        <module>spring-security-swagger2</module>
     </modules>
 
 
