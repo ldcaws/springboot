@@ -1,0 +1,3 @@
+访问地址：http://localhost:8080/
+
+回调自己的方法authorization_code获得access_token，并根据access_token获取用户信息

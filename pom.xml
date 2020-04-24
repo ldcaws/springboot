@@ -11,6 +11,7 @@
     <modules>
         <module>security-web</module>
         <module>spring-security-swagger2</module>
+        <module>spring-security-github</module>
     </modules>
 
 
