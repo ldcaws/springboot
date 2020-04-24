@@ -34,8 +34,8 @@ public class LoginController {
     @GetMapping("/authorization_code")
     public String authorization_code(String code) throws JsonProcessingException {
         Map<String,String> map = new HashMap<>();
-        map.put("client_id","3603532808869d5b4355");
-        map.put("client_secret", "9a6cfedd4a36559da8d4ae8e1af0e3a2cf51ef3d");
+        map.put("client_id","***");
+        map.put("client_secret", "***");
         map.put("state", "ldcaws");
         map.put("code", code);
         map.put("redirect_uri", "http://localhost:8080/authorization_code");
