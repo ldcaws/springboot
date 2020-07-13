@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ldc.transactionaldemo.mapper.UserMapper">
+
+    <sql id="userColumns">
+        id,
+        name,
+        sex,
+        age
+    </sql>
+
+    <select id="getUserList" resultType="com.ldc.transactionaldemo.model.User">
+        select u.id,u.name,u.sex,u.age,u.password from s_user u
+    </select>
+
+    <insert id="insertUser" parameterType="com.ldc.transactionaldemo.model.User">
+        insert into s_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=''">
+                id,
+            </if>
+            <if test="name != null and name !=''">
+                name,
+            </if>
+            <if test="sex != null and sex !=''">
+                sex,
+            </if>
+            <if test="age != null and age !=''">
+                age,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=''">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null and name !=''">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null and sex !=''">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null and age !=''">
+                #{age,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>
