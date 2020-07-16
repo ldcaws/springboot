@@ -47,6 +47,7 @@ public class LogAspect {
         logger.info("请求的参数(数组形式) : " + Arrays.toString(jp.getArgs()));
 
         try {
+            //方便在全局异常处理时获取数据将日志入库
             request.setAttribute("eventType",getEventType(jp));
             request.setAttribute("operationType",getOperationType(jp));
             request.setAttribute("eventLevel",getEventLevel(jp));
