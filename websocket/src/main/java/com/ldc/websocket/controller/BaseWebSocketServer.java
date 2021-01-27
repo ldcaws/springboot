@@ -1,4 +1,4 @@
-package com.ldc.websocket.server;
+package com.ldc.websocket.controller;
 
 import javax.websocket.Session;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,7 +37,8 @@ public class BaseWebSocketServer {
      * @param currentOnlineUsers
      * @return
      */
-    public ConcurrentHashMap<String, Session> getRecievers(String senderUserId, String senderToken, ConcurrentHashMap<String, Session> currentOnlineUsers) {
+    public ConcurrentHashMap<String, Session> getRecievers(String senderUserId, String senderToken,
+                                                           ConcurrentHashMap<String, Session> currentOnlineUsers) {
 
         //根据发送者及当前在线人数，获取与当前发送数据用户属于同一班组的所有用户
         ConcurrentHashMap<String, Session> sendUsers = new ConcurrentHashMap();

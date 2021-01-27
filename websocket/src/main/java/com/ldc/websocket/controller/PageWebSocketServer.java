@@ -1,13 +1,16 @@
-package com.ldc.websocket.server;
+package com.ldc.websocket.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.ldc.websocket.handler.RTMessageHandler;
+import com.ldc.websocket.handler.UavMessageHandler;
 import com.ldc.websocket.model.WebsocketMessage;
 import com.ldc.websocket.processor.MessageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -19,13 +22,13 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @description:
  * @author: ss
- * @time: 2020/6/10 22:41
+ * @time: 2020/6/10 20:46
  */
-@ServerEndpoint("/websocket/inspect/{userId}/{token}")
+@ServerEndpoint("/websocket/web/{userId}/{token}")
 @Component
-public class AppWebSocketServer extends BaseWebSocketServer {
+public class PageWebSocketServer extends BaseWebSocketServer {
 
-    private Logger logger = LoggerFactory.getLogger(AppWebSocketServer.class);
+    private Logger logger = LoggerFactory.getLogger(PageWebSocketServer.class);
 
     private static ConcurrentHashMap<String, Session> userList = new ConcurrentHashMap<>();
 
@@ -47,9 +50,9 @@ public class AppWebSocketServer extends BaseWebSocketServer {
         if (userList.get(wsKey) == null) {
             userList.put(wsKey, session);
             addOnlineCount();
-            logger.info("Websocket-APP用户【" + userId + "】建立连接成功！");
+            logger.info("Websocket-WEB用户【" + userId + "】建立连接成功！");
         } else {
-            logger.info("Websocket-APP用户【" + userId + "】已经连接！");
+            logger.info("Websocket-WEB用户【" + userId + "】已经连接！");
         }
     }
 
@@ -64,10 +67,16 @@ public class AppWebSocketServer extends BaseWebSocketServer {
     public void onMessage(String message, Session session) throws Exception {
         logger.info("Websocket-收到客户端消息:" + message);
 
+        UriComponents uriComponents = UriComponentsBuilder.fromUri(session.getRequestURI()).build();
+        String userId = uriComponents.getQueryParams().getFirst("userId");
+        String userName = uriComponents.getQueryParams().getFirst("userName");
+
+        //接受无人机的位置消息
         message = message.replaceAll("null","\"\"");
+        //WebsocketMessage websocketMessage = (WebsocketMessage) JSONUtil.JSONToObject(message, WebsocketMessage.class, new HashMap());
         WebsocketMessage websocketMessage = JSON.parseObject(JSONObject.toJSONString(JSON.parse(message)),WebsocketMessage.class);
-        if (websocketMessage != null && websocketMessage.getType() != null && websocketMessage.getType().equals("location")) {
-            messageProcessor = new MessageProcessor(new RTMessageHandler());
+        if (websocketMessage != null && websocketMessage.getType() != null && websocketMessage.getType().trim().equals("type")) {
+            messageProcessor = new MessageProcessor(new UavMessageHandler());
             messageProcessor.handlerMessage(websocketMessage);
         }
     }
@@ -84,7 +93,6 @@ public class AppWebSocketServer extends BaseWebSocketServer {
         if (session.isOpen()) {
             session.close();
         }
-
         logger.info("Websocket-处理推送消息时出现异常：" + exception.getLocalizedMessage());
     }
 
@@ -120,7 +128,7 @@ public class AppWebSocketServer extends BaseWebSocketServer {
         if (wsKey != null && !"".equals(wsKey) && session != null) {
             if (session != null && session.isOpen()) {
                 try {
-                    System.out.print("推送给APP端【"+ wsKey+"】消息："+message);
+                    System.out.print("推送给平台端【"+ wsKey+"】消息："+message);
                     session.getBasicRemote().sendText(message);
                 } catch (IOException e) {
                     e.printStackTrace();

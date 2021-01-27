@@ -3,7 +3,7 @@ package com.ldc.websocket.handler;
 import com.alibaba.fastjson.JSON;
 import com.ldc.websocket.common.SpringBeanUtil;
 import com.ldc.websocket.model.WebsocketMessage;
-import com.ldc.websocket.server.PageWebSocketServer;
+import com.ldc.websocket.controller.PageWebSocketServer;
 
 import javax.websocket.Session;
 import java.util.Set;
